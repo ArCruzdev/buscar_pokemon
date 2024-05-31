@@ -5,112 +5,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Encuentra tu Pokemon</title>
-  <style>
-    html {
-      text-align: center;
-    }
-
-    .from-search {
-      display: block;
-      margin: 10vh auto;
-    }
-
-    .container-pokemones {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      text-align: center;
-    }
-    .filter {
-  /*display: none;*/
-  visibility: hidden;
-  opacity: 0;
-  order: 1;
-}
-  </style>
+  <link rel="stylesheet" href="./App/assets/styles.css">
+  <link rel="shortcut icon" href="./App/assets/icons8-favicon-16.png" type="image/x-icon">
 </head>
 
 <body>
-  <form class="from-search">
-    <input type="search" name="buscar" required placeholder="bulbasur...pikachu.." class="filtro">
-    <input type="submit" value="Llamar">
-  </form>
-  <main class="container-pokemones"></main>
-  <script>
-    const d = document,
-      API_POKEMON = 'https://pokeapi.co/api/v2/pokemon/',
-      $main = d.querySelector('.container-pokemones'),
-      w = window;
-    let page = 20,
-      limit = 20;
-
-    const $form = d.querySelector('.from-search')
-
-    async function getPokemones() {
-      try {
-        const res = await fetch(`${API_POKEMON}?offset=${page}&limit=${limit}`)
-        //console.log(res)
-        if(!res.ok) throw {status: res.status,statusText: res.statusText}
-        const json = await res.json()
-        //console.log(json)
-        let $template = ''
-
-        for (let i = 0; i < json.results.length; i++) {
-          try {
-            const res = await fetch(json.results[i].url)
-            console.log(res)
-            if(!res.ok) throw {status: res.status,statusText: res.statusText}
-            const pokemon = await res.json()
-            //console.log(pokemon)
-
-            $template += `
-                            <figure class='selector'>
-                                <img src='${pokemon.sprites.front_default}' alt='${pokemon.name}'>
-                                <figcaption>${pokemon.name}</figcaption>
-                            </figure>
-                        `
-
-          } catch (err) {
-            console.log(err)
-          }
-
-        }
-
-        $main.innerHTML = $template
-        $form.addEventListener('submit', e => {
-              e.preventDefault()
-              console.log(e.target.buscar.value)
-              d.querySelectorAll('.selector').forEach(pok => {
-                pok.textContent.toLowerCase().includes(e.target.buscar.value)
-                ? pok.classList.remove('filter')
-                : pok.classList.add('filter')
-              })
-              
-            })
-
-
-      } catch (err) {
-        console.log(err)
-      }
-    }
-
-
-
-    d.addEventListener('DOMContentLoaded', e => {
-      getPokemones()
-    })
-
-    w.addEventListener('scroll', e => {
-      const { scrollTop, clientHeight, scrollHeight } = d.documentElement;
-      //console.log(scrollTop,clientHeight,scrollHeight)
-      if (scrollTop + clientHeight >= scrollHeight) {
-        page += 20;
-        getPokemones()
-      }
-    })
-
-
-
-  </script>
+  <main id="root"></main>
+  <script type="module" src="./script.js"></script>
 </body>
-
 </html>
